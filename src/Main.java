@@ -28,23 +28,36 @@ public class Main {
             iPLo = Sampling(beg, end);
             iPMi = Sampling(beg, end);
             iPHi = Sampling(beg, end);
-
-
         }
+
+
+        // ensure pivots are in correct order
+        if (iPMi < iPLo) {
+            int temp = iPLo;
+            iPLo = iPMi;
+            iPMi = temp;
+        }
+        if (iPHi < iPMi) {
+            int temp = iPMi;
+            iPMi = iPHi;
+            iPHi = temp;
+        }
+
+
         System.out.printf("\n\niPLo: %d, iPMi: %d, iPHi: %d", iPLo, iPMi, iPHi);
 
         //finding correspondent values of indexes
         int PLo = a[iPLo], PMi = a[iPMi], PHi = a[iPHi];
-        if (PMi < PLo) {
-            int temp = PLo;
-            PLo = PMi;
-            PMi = temp;
-        }
-        if (PHi < PMi) {
-            int temp = PMi;
-            PMi = PHi;
-            PHi = temp;
-        }
+//        if (PMi < PLo) {
+//            int temp = PLo;
+//            PLo = PMi;
+//            PMi = temp;
+//        }
+//        if (PHi < PMi) {
+//            int temp = PMi;
+//            PMi = PHi;
+//            PHi = temp;
+//        }
 
         //finding 3 initial pivots
         //  NOTE 1 : each will be a different task
@@ -76,7 +89,7 @@ public class Main {
                 if (i == c) break;
                 i++;
             }
-            while (a[j] > P) {
+            while (a[j] >= P) {
                 if (j == b) break;
                 j--;
             }
