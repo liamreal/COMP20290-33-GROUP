@@ -7,19 +7,18 @@ public class Main {
     private Main() {}
 
     public static void PTPSort(Integer[] a, int beg, int end) {
-        if (end <= beg + 1) {
+        if (end <= beg) {
             return; // Base case for recursion: return if the section to sort is 1 or 0 elements
         }
 
         // Selecting three distinct indices for pivots
         int iPLo = 0, iPMi = 0, iPHi = 0;
 
-        // Ensure the pivots are distinct
-        while ((iPLo == iPMi) || (iPMi == iPHi) || (iPHi == iPLo)) {
+
             iPLo = Sampling(beg, end);
             iPMi = Sampling(beg, end);
             iPHi = Sampling(beg, end);
-        }
+
 
         // we get the pivot values
         int PLo = a[iPLo], PMi = a[iPMi], PHi = a[iPHi];
@@ -32,41 +31,64 @@ public class Main {
         System.out.println("Pivots: " + PLo + ", " + PMi + ", " + PHi);
 
         // Partitioning the array around each pivot
-        int iL = Hoare(a, beg, beg-1, PLo);
+        int iL = Hoare(a, beg, end, PLo);
         int iM = Hoare(a, iL + 1, end, PMi);
         int iH = Hoare(a, iM + 1, end, PHi);
 
         System.out.println("Partitions at: " + iL + ", " + iM + ", " + iH);
+//        System.out.println("Array after partitioning: " + Arrays.toString(a));
 
         // Recursively sorting the partitions
-        PTPSort(a, beg, iL);
-        PTPSort(a, iL + 1, iM);
-        PTPSort(a, iM + 1, iH);
-        PTPSort(a, iH + 1, end);
+        if (iL > beg) PTPSort(a, beg, iL); // these provide additional checks so that there is no unnecessary sorts
+        if (iM > iL + 1) PTPSort(a, iL + 1, iM);
+        if (iH > iM + 1) PTPSort(a, iM + 1, iH);
+        if (end > iH + 1) PTPSort(a, iH + 1, end);
+//        PTPSort(a, beg, iL);
+//        PTPSort(a, iL + 1, iM);
+//        PTPSort(a, iM + 1, iH);
+//        PTPSort(a, iH + 1, end);
     }
 
     public static int Hoare(Integer[] a, int b, int c, int P) {
-        int i = b+1, j = c-1;
+        int i = b, j = c;
         int temp;
         while (true) {
-            while (a[i] < P) {
-                if (i == c) break;
+            while (i < c && a[i] < P) { // to make sure i does not go out of bounds
                 i++;
             }
-            while (a[j] >= P) {
-                if (j == b) break;
+            while (j > b && a[j] >= P) {
                 j--;
             }
-            if (i > j) {
+            if (i >= j) {
                 return j;
             }
             temp = a[i];
             a[i] = a[j];
             a[j] = temp;
-
-
         }
     }
+//    public static int Hoare(Integer[] a, int b, int c, int P) {
+//        int i = b, j = c;
+//        int temp;
+//        while (true) {
+//            while (a[i] < P) {
+//                if (i == c) break;
+//                i++;
+//            }
+//            while (a[j] >= P) {
+//                if (j == b) break;
+//                j--;
+//            }
+//            if (i > j) {
+//                return j;
+//            }
+//            temp = a[i];
+//            a[i] = a[j];
+//            a[j] = temp;
+//
+//
+//        }
+//    }
 
     public static int Sampling(int beg, int end) {
         return rand.nextInt(end - beg) + beg;
@@ -86,7 +108,7 @@ public class Main {
                 7, 3, 2, 1, 4, 5, 6, 8, 9, 0
         };
 
-        PTPSort(arr, 0, arr.length);
+        PTPSort(arr, 0, arr.length-1);
         System.out.println(Arrays.toString(arr)); // Print the sorted array
     }
 }
