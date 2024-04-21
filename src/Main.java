@@ -11,13 +11,15 @@ public class Main {
             return; // Base case for recursion: return if the section to sort is 1 or 0 elements
         }
 
+        if (a.length < 7) {return;}
+
         // Selecting three distinct indices for pivots
         int iPLo = 0, iPMi = 0, iPHi = 0;
 
 
-            iPLo = Sampling(beg, end);
-            iPMi = Sampling(beg, end);
-            iPHi = Sampling(beg, end);
+        iPLo = Sampling(beg, end);
+        iPMi = Sampling(beg, end);
+        iPHi = Sampling(beg, end);
 
 
         // we get the pivot values
@@ -50,15 +52,16 @@ public class Main {
     }
 
     public static int Hoare(Integer[] a, int b, int c, int P) {
-        int i = b, j = c;
+        int i = b-1, j = c+1;
         int temp;
         while (true) {
-            while (i < c && a[i] < P) { // to make sure i does not go out of bounds
+
+            do { // to make sure i does not go out of bounds
                 i++;
-            }
-            while (j > b && a[j] >= P) {
+            } while (a[i] < P);
+            do {
                 j--;
-            }
+            }while (a[j] > P);
             if (i >= j) {
                 return j;
             }
@@ -67,28 +70,6 @@ public class Main {
             a[j] = temp;
         }
     }
-//    public static int Hoare(Integer[] a, int b, int c, int P) {
-//        int i = b, j = c;
-//        int temp;
-//        while (true) {
-//            while (a[i] < P) {
-//                if (i == c) break;
-//                i++;
-//            }
-//            while (a[j] >= P) {
-//                if (j == b) break;
-//                j--;
-//            }
-//            if (i > j) {
-//                return j;
-//            }
-//            temp = a[i];
-//            a[i] = a[j];
-//            a[j] = temp;
-//
-//
-//        }
-//    }
 
     public static int Sampling(int beg, int end) {
         return rand.nextInt(end - beg) + beg;
@@ -105,7 +86,7 @@ public class Main {
                 83, 20, 60, 78, 35, 21, 48, 95, 15, 79,
                 69, 42, 66, 27, 96, 57, 12, 38, 94, 59,
                 33, 86, 52, 54, 16, 81, 73, 44, 90, 85,
-                7, 3, 2, 1, 4, 5, 6, 8, 9, 0
+                7, 3, 2, 1, 4, 5, 6, 8, 9, 0,
         };
 
         PTPSort(arr, 0, arr.length-1);
