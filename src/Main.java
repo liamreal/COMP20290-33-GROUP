@@ -5,17 +5,29 @@ import java.util.stream.IntStream;
 public class Main {
 
 
+    static boolean isSorted(Integer[] array) {
+        for (int i = 0; i < array.length - 1; i++) {
+            if (array[i] > array[i + 1])
+                return false;
+        }
+        return true;
+    }
+
 
     public static class MyThreadRunner implements Runnable {
 
         public Integer[] array;
         public int beg;
         public int iX;
+
+        // constructor assigns variables to this thread (because cannot be pass as args in run() )
         MyThreadRunner(Integer[] a, int b, int i) {
             array = a;
             beg = b;
             iX = i;
         }
+
+        // run PTPSort on this new thread using local variables
         public void run() {
             if (iX > beg) {
                 Main.PTPSort(array, beg, iX);
@@ -126,10 +138,21 @@ public class Main {
         };
 
         // generate 100 random number between 0 to n
-        int n = 1000;
+        int n = 100000;
         Integer[] array = Arrays.stream( new Random().ints(n, 0, n).toArray() ).boxed().toArray( Integer[]::new );
 
         PTPSort(array, 0, array.length-1);
         System.out.println(Arrays.toString(array)); // Print the sorted array
+
+        // JUST for checking if is sorted, not efficient but gets job done
+        if (isSorted(array)) {
+            System.out.println("\nSorted");
+        } else {
+            System.out.println("\nNOT sorted");
+        }
+
+
+
+
     }
 }
