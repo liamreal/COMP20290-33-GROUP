@@ -197,7 +197,7 @@ public class Main {
                 double org_sort = 0;
                 double org_part = 0;
 
-                // this is JUST so we only print the very lef column numbers only once, e.g.
+                // this is JUST so we only print the very left column numbers only once, e.g.
                 //      100K
                 //
                 //  --------
