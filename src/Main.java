@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -64,14 +65,15 @@ public class Main {
         if (PHi < PMi) { int tmp = PHi; PHi = PMi; PMi = tmp; }
         if (PMi < PLo) { int tmp = PMi; PMi = PLo; PLo = tmp; }
 
-        System.out.println("Pivots: " + PLo + ", " + PMi + ", " + PHi);
+//        System.out.println("Pivots: " + PLo + ", " + PMi + ", " + PHi);
 
         // Partitioning the array around each pivot
         int iL = Hoare(a, beg, end, PLo);
         int iM = Hoare(a, iL + 1, end, PMi);
         int iH = Hoare(a, iM + 1, end, PHi);
 
-        System.out.println("Partitions at: " + iL + ", " + iM + ", " + iH);
+//        System.out.println("Partitions at: " + iL + ", " + iM + ", " + iH);
+
 //        System.out.println("Array after partitioning: " + Arrays.toString(a));
 
         // Recursively sorting the partitions
@@ -141,18 +143,105 @@ public class Main {
         int n = 100000;
         Integer[] array = Arrays.stream( new Random().ints(n, 0, n).toArray() ).boxed().toArray( Integer[]::new );
 
-        PTPSort(array, 0, array.length-1);
-        System.out.println(Arrays.toString(array)); // Print the sorted array
+//        PTPSort(array, 0, array.length-1);
+//        System.out.println(Arrays.toString(array)); // Print the sorted array
+//
+//        // JUST for checking if is sorted, not efficient but gets job done
+//        if (isSorted(array)) {
+//            System.out.println("\nSorted");
+//        } else {
+//            System.out.println("\nNOT sorted");
+//        }
 
-        // JUST for checking if is sorted, not efficient but gets job done
-        if (isSorted(array)) {
-            System.out.println("\nSorted");
-        } else {
-            System.out.println("\nNOT sorted");
+
+        System.out.println("\n");
+        computeResults();
+
+
+
+    }
+
+    private static void computeResults() {
+        double[] Ustl_cutoff = {2.0, 1.0, 0.5, 0.2, 0.1}; // cutoffs for normal sort (in millions, by * by M)
+        int trials = 100; // number of times we run a test (so each time you see is averaged over this many tests)
+
+        HashMap<Character, Integer> multiples = new HashMap<>();
+        multiples.put('K', 1000); // 1 thousand
+        multiples.put('M', 1000000); // 1 million
+        Character multiple_index = 'K'; // HERE we choose what multiple of n to use, e.g. M = million, K = thousand, etc.
+
+        int n = 0;
+
+        printLine();
+        System.out.println();
+        System.out.printf(" %-14s| %-14s| %-14s %-14s| %-14s %-14s", "N", "Ustl", "Tptp", "", "Torg", "");
+        System.out.println();
+        System.out.printf(" %-14s| %-14s|  %-13s  %-13s|  %-13s  %-13s", "", "", "sort", "part", "sort", "part");
+        printLine();
+        printLine();
+
+        // 100M - 500M
+        for (int i = 0; i < 5; i++) {
+            // this is number of elements and their multiples, some of this stuff is JUST for printing in table,
+            // but n below goes 100, 200, 300, 400, 500, then letter is the multiple in hashtable, SO
+            // 100 * K = 100 thousand, 100 * M = 100 million, as specified previously (higher than K is memory intensive)
+            n += 100;
+            String string_n = String.valueOf(n);
+            Character letter = multiple_index;
+
+            for (int j = 0; j < 5; j++) {
+
+                // times for sort (NOTE: we do n * multiple, so 100 * M = 100M = 100 million elements)
+                double ptp_sort = timedPTP(n * multiples.get(multiple_index), trials);
+                double ptp_part = 0;
+                double org_sort = 0;
+                double org_part = 0;
+
+                // this is JUST so we only print the very lef column numbers only once, e.g.
+                //      100K
+                //
+                //  --------
+                //      200K
+                //
+                //  --------
+                //  etc.
+                if (j > 0) {
+                    string_n = "";
+                    letter = ' ';
+                }
+                System.out.println();
+                System.out.printf(" %-14s| %-14s| %-14s %-14s| %-14s %-14s", string_n + letter, String.valueOf(Ustl_cutoff[j]) + multiple_index, ptp_sort, ptp_part, org_sort, org_part);
+            }
+            printLine();
         }
 
+    }
+
+    // returns time (in seconds) of how ong took to run code, takes in how many trials to run
+    private static double timedPTP(int n, int trials) {
+
+        // generate array of n random numbers between 0 to n
+        Integer[] array = Arrays.stream( new Random().ints(n, 0, n).toArray() ).boxed().toArray( Integer[]::new );
 
 
+        // start and end time of program using System.nanoTime, we are only interested in the sorting, which is why it
+        // does not start before line above, where it creates the array
+        double start_time = System.nanoTime();
+        for (int i = 0; i < trials; i++) {
+            PTPSort(array, 0, array.length - 1);
+        }
+        double end_time = System.nanoTime();
+        // end of sorting test for specified number of trials
 
+        // return time (converted from nanoseconds to seconds AND dividing number of trials to get average)
+        return ((end_time - start_time) * 1000000000) / trials;
+    }
+
+    // divider for new table segments
+    private static void printLine() {
+        System.out.println();
+        for (int i = 0; i < 93; i++) {
+            System.out.printf("-");
+        }
     }
 }
