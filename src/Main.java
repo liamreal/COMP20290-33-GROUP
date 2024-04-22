@@ -1,7 +1,29 @@
 import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class Main {
+
+
+
+    public static class MyThreadRunner implements Runnable {
+
+        public Integer[] array;
+        public int beg;
+        public int iX;
+        MyThreadRunner(Integer[] a, int b, int i) {
+            array = a;
+            beg = b;
+            iX = i;
+        }
+        public void run() {
+            if (iX > beg) {
+                Main.PTPSort(array, beg, iX);
+            }
+        }
+    }
+
+    static int seed = 0;
     static Random rand = new Random();
 
     private Main() {}
@@ -41,10 +63,23 @@ public class Main {
 //        System.out.println("Array after partitioning: " + Arrays.toString(a));
 
         // Recursively sorting the partitions
-        if (iL > beg) PTPSort(a, beg, iL); // these provide additional checks so that there is no unnecessary sorts
-        if (iM > iL + 1) PTPSort(a, iL + 1, iM);
-        if (iH > iM + 1) PTPSort(a, iM + 1, iH);
-        if (end > iH + 1) PTPSort(a, iH + 1, end);
+
+//        // these provide additional checks so that there is no unnecessary sorts
+//        StartingThreads.CustomRunnable.run(a, beg, iL);
+//        StartingThreads.CustomRunnable.run(a, iL + 1, iM);
+//        StartingThreads.CustomRunnable.run(a, iM + 1, iH);
+//        StartingThreads.CustomRunnable.run(a, iH + 1, end);
+
+        // these provide additional checks so that there is no unnecessary sorts
+        MyThreadRunner thread_1 = new MyThreadRunner(a, beg, iL);
+        thread_1.run();
+        MyThreadRunner thread_2 = new MyThreadRunner(a, iL + 1, iM);
+        thread_2.run();
+        MyThreadRunner thread_3 = new MyThreadRunner(a, iM + 1, iH);
+        thread_3.run();
+        MyThreadRunner thread_4 = new MyThreadRunner(a, iH + 1, end);
+        thread_4.run();
+
 //        PTPSort(a, beg, iL);
 //        PTPSort(a, iL + 1, iM);
 //        PTPSort(a, iM + 1, iH);
@@ -58,6 +93,7 @@ public class Main {
 
             do { // to make sure i does not go out of bounds
                 i++;
+                if (i >= a.length) i--; // extra check for out of bounds
             } while (a[i] < P);
             do {
                 j--;
@@ -89,7 +125,11 @@ public class Main {
                 7, 3, 2, 1, 4, 5, 6, 8, 9, 0,
         };
 
-        PTPSort(arr, 0, arr.length-1);
-        System.out.println(Arrays.toString(arr)); // Print the sorted array
+        // generate 100 random number between 0 to n
+        int n = 1000;
+        Integer[] array = Arrays.stream( new Random().ints(n, 0, n).toArray() ).boxed().toArray( Integer[]::new );
+
+        PTPSort(array, 0, array.length-1);
+        System.out.println(Arrays.toString(array)); // Print the sorted array
     }
 }
