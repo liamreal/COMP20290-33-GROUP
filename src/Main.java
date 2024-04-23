@@ -3,6 +3,8 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+
+
 public class Main {
 
 
@@ -46,7 +48,12 @@ public class Main {
             return; // Base case for recursion: return if the section to sort is 1 or 0 elements
         }
 
-        if (a.length < 7) {return;}
+//        // switch to STLSort when under cutoff point
+//        if ((end - beg) < Ustl) {
+////            Arrays.sort();
+//            return;}
+
+        if (a.length < 7) return;
 
         // Selecting three distinct indices for pivots
         int iPLo = 0, iPMi = 0, iPHi = 0;
@@ -143,15 +150,17 @@ public class Main {
         int n = 100000;
         Integer[] array = Arrays.stream( new Random().ints(n, 0, n).toArray() ).boxed().toArray( Integer[]::new );
 
-//        PTPSort(array, 0, array.length-1);
-//        System.out.println(Arrays.toString(array)); // Print the sorted array
-//
-//        // JUST for checking if is sorted, not efficient but gets job done
-//        if (isSorted(array)) {
-//            System.out.println("\nSorted");
-//        } else {
-//            System.out.println("\nNOT sorted");
-//        }
+
+         // check if arr sorted
+        PTPSort(array, 0, array.length-1);
+        System.out.println(Arrays.toString(array)); // Print the sorted array
+
+        // JUST for checking if is sorted, not efficient but gets job done
+        if (isSorted(array)) {
+            System.out.println("\nSorted");
+        } else {
+            System.out.println("\nNOT sorted");
+        }
 
 
         System.out.println("\n");
@@ -166,6 +175,7 @@ public class Main {
         int trials = 100; // number of times we run a test (so each time you see is averaged over this many tests)
 
         HashMap<Character, Integer> multiples = new HashMap<>();
+        multiples.put('-', 1); // 1
         multiples.put('K', 1000); // 1 thousand
         multiples.put('M', 1000000); // 1 million
         Character multiple_index = 'K'; // HERE we choose what multiple of n to use, e.g. M = million, K = thousand, etc.
@@ -193,9 +203,9 @@ public class Main {
 
                 // times for sort (NOTE: we do n * multiple, so 100 * M = 100M = 100 million elements)
                 double ptp_sort = timedPTP(n * multiples.get(multiple_index), trials);
-                double ptp_part = 0;
-                double org_sort = 0;
-                double org_part = 0;
+                double ptp_part = 0.0;
+                double org_sort = QuickSortMultiThreading.timedQuickSort(n *multiples.get(multiple_index), trials);
+                double org_part = 0.0;
 
                 // this is JUST so we only print the very left column numbers only once, e.g.
                 //      100K
@@ -217,24 +227,30 @@ public class Main {
 
     }
 
-    // returns time (in seconds) of how ong took to run code, takes in how many trials to run
+    // returns time (in seconds) of how long took to run code, takes in how many trials to run
     private static double timedPTP(int n, int trials) {
+        double total_time = 0;
+        int j = 0;
 
-        // generate array of n random numbers between 0 to n
-        Integer[] array = Arrays.stream( new Random().ints(n, 0, n).toArray() ).boxed().toArray( Integer[]::new );
+        while (j < trials) {
+            // generate array of n random numbers between 0 to n
+            Integer[] array = Arrays.stream( new Random().ints(n, 0, n).toArray() ).boxed().toArray( Integer[]::new );
 
 
-        // start and end time of program using System.nanoTime, we are only interested in the sorting, which is why it
-        // does not start before line above, where it creates the array
-        double start_time = System.nanoTime();
-        for (int i = 0; i < trials; i++) {
+            // start and end time of program using System.nanoTime, we are only interested in the sorting, which is why it
+            // does not start before line above, where it creates the array
+            double start_time = System.nanoTime();
             PTPSort(array, 0, array.length - 1);
+            double end_time = System.nanoTime();
+            // end of sorting test for specified number of trials
+
+            total_time += (end_time - start_time);
+            j++;
         }
-        double end_time = System.nanoTime();
-        // end of sorting test for specified number of trials
+
 
         // return time (converted from nanoseconds to seconds AND dividing number of trials to get average)
-        return ((end_time - start_time) * 1000000000) / trials;
+        return (total_time / trials) / 1_000_000_000;
     }
 
     // divider for new table segments
@@ -244,4 +260,22 @@ public class Main {
             System.out.printf("-");
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
