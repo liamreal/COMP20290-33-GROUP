@@ -120,8 +120,6 @@ public class QuickSortMultiThreading
         // thread creation as per resources
         ForkJoinPool pool = ForkJoinPool.commonPool();
 
-        for (int i = 0; i < trials; i++) {
-        }
 
         while (j < trials) {
             // generate array of n random numbers between 0 to n

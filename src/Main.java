@@ -178,16 +178,17 @@ public class Main {
         HashMap<Character, Integer> multiples = new HashMap<>();
         multiples.put('-', 1); // 1
         multiples.put('K', 1000); // 1 thousand
+        multiples.put('?', 10000); // test
         multiples.put('M', 1000000); // 1 million
-        Character multiple_index = 'K'; // HERE we choose what multiple of n to use, e.g. M = million, K = thousand, etc.
+        Character multiple_index = '?'; // HERE we choose what multiple of n to use, e.g. M = million, K = thousand, etc.
 
         int n = 0;
 
         printLine();
         System.out.println();
-        System.out.printf(" %-14s| %-14s| %-14s %-14s| %-14s %-14s", "N", "Ustl", "Tptp", "", "Torg", "");
+        System.out.printf(" %-14s| %-14s %-14s| %-14s %-14s", "N", "Tptp", "", "Torg", "");
         System.out.println();
-        System.out.printf(" %-14s| %-14s|  %-13s  %-13s|  %-13s  %-13s", "", "", "sort", "part", "sort", "part");
+        System.out.printf(" %-14s|  %-13s  %-13s|  %-13s  %-13s", "", "sort", "", "sort", "");
         printLine();
         printLine();
 
@@ -201,7 +202,7 @@ public class Main {
             Character letter = multiple_index;
 
 
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < 1; j++) {
 
                 // times for sort (NOTE: we do n * multiple, so 100 * M = 100M = 100 million elements)
                 double ptp_sort = timedPTP(n * multiples.get(multiple_index), trials);
@@ -225,7 +226,7 @@ public class Main {
                     letter = ' ';
                 }
                 System.out.println();
-                System.out.printf(" %-14s| %-14s| %-14s %-14s| %-14s %-14s", string_n + letter, String.valueOf(Ustl_cutoff[j]) + multiple_index, ptp_sort, ptp_part, org_sort, org_part);
+                System.out.printf(" %-14s| %-14s %-14s| %-14s %-14s", n * multiples.get(multiple_index), ptp_sort, "", org_sort, "");
             }
             printLine();
         }
@@ -261,7 +262,7 @@ public class Main {
     // divider for new table segments
     private static void printLine() {
         System.out.println();
-        for (int i = 0; i < 93; i++) {
+        for (int i = 0; i < 79; i++) {
             System.out.printf("-");
         }
     }
