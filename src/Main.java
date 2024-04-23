@@ -39,6 +39,7 @@ public class Main {
     }
 
     static int seed = 0;
+    static int Ustl = 0;
     static Random rand = new Random();
 
     private Main() {}
@@ -48,10 +49,10 @@ public class Main {
             return; // Base case for recursion: return if the section to sort is 1 or 0 elements
         }
 
-//        // switch to STLSort when under cutoff point
-//        if ((end - beg) < Ustl) {
-////            Arrays.sort();
-//            return;}
+        // switch to STLSort when under cutoff point
+        if ((end - beg) < Ustl) {
+//            Arrays.sort();
+            return;}
 
         if (a.length < 7) return;
 
@@ -199,6 +200,7 @@ public class Main {
             String string_n = String.valueOf(n);
             Character letter = multiple_index;
 
+
             for (int j = 0; j < 5; j++) {
 
                 // times for sort (NOTE: we do n * multiple, so 100 * M = 100M = 100 million elements)
@@ -206,6 +208,9 @@ public class Main {
                 double ptp_part = 0.0;
                 double org_sort = QuickSortMultiThreading.timedQuickSort(n *multiples.get(multiple_index), trials);
                 double org_part = 0.0;
+
+                // Ustl cutoff
+                Ustl = (int) (Ustl_cutoff[j] * multiples.get(multiple_index));
 
                 // this is JUST so we only print the very left column numbers only once, e.g.
                 //      100K
