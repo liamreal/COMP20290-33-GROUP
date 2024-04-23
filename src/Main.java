@@ -21,19 +21,19 @@ public class Main {
 
         public Integer[] array;
         public int beg;
-        public int iX;
+        public int end;
 
         // constructor assigns variables to this thread (because cannot be pass as args in run() )
-        MyThreadRunner(Integer[] a, int b, int i) {
+        MyThreadRunner(Integer[] a, int b, int e) {
             array = a;
             beg = b;
-            iX = i;
+            end = e;
         }
 
         // run PTPSort on this new thread using local variables
         public void run() {
-            if (iX > beg) {
-                Main.PTPSort(array, beg, iX);
+            if (end > beg) {
+                Main.PTPSort(array, beg, end);
             }
         }
     }
