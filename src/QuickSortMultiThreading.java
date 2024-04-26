@@ -152,6 +152,20 @@ public class QuickSortMultiThreading
         // return time (converted from nanoseconds to seconds AND dividing number of trials to get average)
         return (total_time / trials) / 1_000_000_000;
     }
+
+    public static void main(String args[]) {
+        // this is just to test sorting
+        ForkJoinPool pool = ForkJoinPool.commonPool();
+        int n = 100000;
+        Integer[] array = Arrays.stream( new Random().ints(n, 0, n).toArray() ).boxed().toArray( Integer[]::new );
+        pool.invoke(new QuickSortMultiThreading(0, array.length - 1, array));
+        // JUST for checking if is sorted, not efficient but gets job done
+        if (Main.isSorted(array)) {
+            System.out.println("\nSorted");
+        } else {
+            System.out.println("\nNOT sorted");
+        }
+    }
 }
 
 // --------------------------------------------
