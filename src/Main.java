@@ -51,7 +51,7 @@ public class Main {
 
         // switch to STLSort when under cutoff point
         if ((end - beg) < Ustl) {
-//            Arrays.sort();
+            Arrays.sort(a,beg,end);
             return;}
 
         if (a.length < 7) return;
@@ -152,7 +152,7 @@ public class Main {
         Integer[] array = Arrays.stream( new Random().ints(n, 0, n).toArray() ).boxed().toArray( Integer[]::new );
 
 
-         // check if arr sorted
+        // check if arr sorted
         PTPSort(array, 0, array.length-1);
         System.out.println(Arrays.toString(array)); // Print the sorted array
 
@@ -187,7 +187,7 @@ public class Main {
         System.out.println();
         System.out.printf(" %-14s| %-14s| %-14s %-14s| %-14s %-14s", "N", "Ustl", "Tptp", "", "Torg", "");
         System.out.println();
-        System.out.printf(" %-14s| %-14s|  %-13s  %-13s|  %-13s  %-13s", "", "", "sort", "part", "sort", "part");
+        System.out.printf(" %-14s| %-14s|  %-13s  %-13s|  %-13s  %-13s", "", "", "sort", "", "sort", "");
         printLine();
         printLine();
 
@@ -265,20 +265,6 @@ public class Main {
             System.out.printf("-");
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
