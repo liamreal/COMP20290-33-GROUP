@@ -86,6 +86,13 @@ public class QuickSortMultiThreading
         if (start >= end)
             return null;
 
+
+
+        if (end - start + 1 < Main.Ustl) {
+            Arrays.sort(arr, start, end + 1);
+            return null;
+        }
+
         // Find partition
         int p = partition(start, end, arr);
 
